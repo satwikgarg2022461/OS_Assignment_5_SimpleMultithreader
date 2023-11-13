@@ -17,6 +17,7 @@ int main(int argc, char** argv) {
   parallel_for(0, size, [&](int i) {
     C[i] = A[i] + B[i];
   }, numThread);
+  
   // verify the result vector
   for(int i=0; i<size; i++) assert(C[i] == 2);
   printf("Test Success\n");
@@ -24,6 +25,6 @@ int main(int argc, char** argv) {
   delete[] A;
   delete[] B;
   delete[] C;
-  
+
   return 0;
 }
