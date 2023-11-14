@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include <pthread.h>
+#include <chrono>
 // int user_main(int argc, char **argv);
 
 /* Demonstration on how to pass lambda as parameter.
@@ -55,6 +56,7 @@ void* thread_function1(void* ptr)
 
 void parallel_for(int low, int high, std::function<void(int)> lambda, int numThreads)
 {
+  auto start_time = std::chrono::high_resolution_clock::now();
   pthread_t tid[numThreads];
   thread_args args[numThreads];
   int chunk = high/numThreads;
@@ -65,17 +67,34 @@ void parallel_for(int low, int high, std::function<void(int)> lambda, int numThr
     // printf("hi\n");
     args[i].end = (i+1)*chunk;
     args[i].lambda = lambda; 
-    pthread_create(&tid[i], NULL,thread_function,(void *)&args[i]);
+    // pthread_create(&tid[i], NULL,thread_function,(void *)&args[i]);
+    if (pthread_create(&tid[i], NULL, thread_function, (void*)&args[i]) != 0)
+    {
+      std::cerr << "Error creating thread " << i << std::endl;
+      std::exit(EXIT_FAILURE); // Exit the program on error
+    }
   }
   for(int i=0; i<numThreads;i++)
   {
-    pthread_join(tid[i],NULL);
+    // pthread_join(tid[i],NULL);
+    if (pthread_join(tid[i], NULL) != 0)
+    {
+      std::cerr << "Error joining thread " << i << std::endl;
+      std::exit(EXIT_FAILURE); // Exit the program on error
+    }
+    auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    std::cout << "Time taken for thread "<< std::to_string(i) << " is: " << duration.count() << " milliseconds" << std::endl;
   }
+  auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  std::cout << "Time taken for parallel_for "<< " is: " << duration.count() << " milliseconds" << std::endl;
 
 }
 
-static void parallel_for(int low1, int high1,int low2, int high2,  std::function<void(int,int)> lambda, int numThreads)
+void parallel_for(int low1, int high1,int low2, int high2,  std::function<void(int,int)> lambda, int numThreads)
 {
+  auto start_time = std::chrono::high_resolution_clock::now();
   pthread_t tid[numThreads][numThreads];
   thread_args1 args[numThreads][numThreads];
   int chunk = high1/numThreads;
@@ -90,17 +109,35 @@ static void parallel_for(int low1, int high1,int low2, int high2,  std::function
       args[i][j].low2 = j*chunk;
       args[i][j].high2 = (j+1)*chunk; 
       args[i][j].lambda = lambda;
-      pthread_create(&tid[i][j], NULL,thread_function1,(void *)&args[i][j]);
+      // pthread_create(&tid[i][j], NULL,thread_function1,(void *)&args[i][j]);
+      if (pthread_create(&tid[i][j], NULL, thread_function1, (void*)&args[i][j]) != 0)
+      {
+        std::cerr << "Error creating thread (" << i << ", " << j << ")" << std::endl;
+        std::exit(EXIT_FAILURE); // Exit the program on error
+      }
     }
     
   }
   for(int i=0; i<numThreads;i++)
   {
+    auto end_time = std::chrono::high_resolution_clock::now(); // Record end time;
     for(int j=0; j<numThreads;j++)
     {
-    pthread_join(tid[i][j],NULL);
+    // pthread_join(tid[i][j],NULL);
+      if (pthread_join(tid[i][j], NULL) != 0)
+      {
+        std::cerr << "Error joining thread (" << i << ", " << j << ")" << std::endl;
+        std::exit(EXIT_FAILURE); // Exit the program on error
+      }
+    end_time = std::chrono::high_resolution_clock::now(); // Record end time
     }
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    std::cout << "Time taken for thread "<< std::to_string(i) << " is: " << duration.count() << " milliseconds" << std::endl;
   }
+  auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+  std::cout << "Time taken for parallel_for "<< " is: " << duration.count() << " milliseconds" << std::endl;
+
 
 }
 
