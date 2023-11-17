@@ -12,4 +12,7 @@ This code is made by Satwik Garg (2022461) and Saurav Haldar(2022464)
 1. Go to upload folder  
 2. Type "make" in the terminal  
 3. Type "./vector" for running vector.cpp  
-4. Type "./matrix" for running matrix.cpp  
+4. Type "./matrix" for running matrix.cpp
+
+#Link for github repositiry:
+https://github.com/satwikgarg2022461/OS_Assignment_5_SimpleMultithreader.git
