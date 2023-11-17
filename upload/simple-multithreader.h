@@ -70,7 +70,7 @@ void parallel_for(int low, int high, std::function<void(int)> lambda, int numThr
     // pthread_create(&tid[i], NULL,thread_function,(void *)&args[i]);
     if (pthread_create(&tid[i], NULL, thread_function, (void*)&args[i]) != 0)
     {
-      std::cerr << "Error creating thread " << i << std::endl;
+      std::cerr << "Error creating thread " << tid[i] << std::endl;
       std::exit(EXIT_FAILURE); // Exit the program on error
     }
   }
@@ -79,12 +79,12 @@ void parallel_for(int low, int high, std::function<void(int)> lambda, int numThr
     // pthread_join(tid[i],NULL);
     if (pthread_join(tid[i], NULL) != 0)
     {
-      std::cerr << "Error joining thread " << i << std::endl;
+      std::cerr << "Error joining thread " << tid[i] << std::endl;
       std::exit(EXIT_FAILURE); // Exit the program on error
     }
     auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    std::cout << "Time taken for thread "<< std::to_string(i) << " is: " << duration.count() << " milliseconds" << std::endl;
+    std::cout << "Time taken for thread "<< std::to_string(tid[i]) << " is: " << duration.count() << " milliseconds" << std::endl;
   }
   auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
@@ -112,7 +112,7 @@ void parallel_for(int low1, int high1,int low2, int high2,  std::function<void(i
       // pthread_create(&tid[i][j], NULL,thread_function1,(void *)&args[i][j]);
       if (pthread_create(&tid[i][j], NULL, thread_function1, (void*)&args[i][j]) != 0)
       {
-        std::cerr << "Error creating thread (" << i << ", " << j << ")" << std::endl;
+        std::cerr << "Error creating thread (" << tid[i][j]<< ")" << std::endl;
         std::exit(EXIT_FAILURE); // Exit the program on error
       }
     }
@@ -126,13 +126,14 @@ void parallel_for(int low1, int high1,int low2, int high2,  std::function<void(i
     // pthread_join(tid[i][j],NULL);
       if (pthread_join(tid[i][j], NULL) != 0)
       {
-        std::cerr << "Error joining thread (" << i << ", " << j << ")" << std::endl;
+        std::cerr << "Error joining thread (" << tid[i][j]<< ")" << std::endl;
         std::exit(EXIT_FAILURE); // Exit the program on error
       }
     end_time = std::chrono::high_resolution_clock::now(); // Record end time
-    }
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    std::cout << "Time taken for thread "<< std::to_string(i) << " is: " << duration.count() << " milliseconds" << std::endl;
+    std::cout << "Time taken for thread "<< std::to_string(tid[i][j]) << " is: " << duration.count() << " milliseconds" << std::endl;
+    }
+    
   }
   auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
@@ -141,37 +142,4 @@ void parallel_for(int low1, int high1,int low2, int high2,  std::function<void(i
 
 }
 
-// int main(int argc, char **argv) {
-  
-//   int rc = user_main(argc, argv);
-//   // /* 
-//   //  * Declaration of a sample C++ lambda function
-//   //  * that captures variable 'x' by value and 'y'
-//   //  * by reference. Global variables are by default
-//   //  * captured by reference and are not to be supplied
-//   //  * in the capture list. Only local variables must be 
-//   //  * explicity captured if they are used inside lambda.
-//   //  */
-//   // int x=5,y=1;
-//   // // Declaring a lambda expression that accepts void type parameter
-//   // auto /*name*/ lambda1 = /*capture list*/[/*by value*/ x, /*by reference*/ &y](void) {
-//   //   /* Any changes to 'x' will throw compilation error as x is captured by value */
-//   //   y = 5;
-//   //   std::cout<<"====== Welcome to Assignment-"<<y<<" of the CSE231(A) ======\n";
-//   //   /* you can have any number of statements inside this lambda body */
-//   // };
-//   // // Executing the lambda function
-//   // demonstration(lambda1); // the value of x is still 5, but the value of y is now 5
-
-  
- 
-//   // auto /*name*/ lambda2 = [/*nothing captured*/]() {
-//   //   std::cout<<"====== Hope you enjoyed CSE231(A) ======\n";
-//   //   /* you can have any number of statements inside this lambda body */
-//   // };
-//   // demonstration(lambda2);
-//   return 0;
-// }
-
-// #define main user_main
 
