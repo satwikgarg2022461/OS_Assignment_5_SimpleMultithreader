@@ -83,12 +83,12 @@ void parallel_for(int low, int high, std::function<void(int)> lambda, int numThr
       std::exit(EXIT_FAILURE); // Exit the program on error
     }
     auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    std::cout << "Time taken for thread "<< std::to_string(tid[i]) << " is: " << duration.count() << " milliseconds" << std::endl;
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    std::cout << "Time taken for thread "<< std::to_string(tid[i]) << " is: " << duration.count() << " microseconds" << std::endl;
   }
   auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-  std::cout << "Time taken for parallel_for "<< " is: " << duration.count() << " milliseconds" << std::endl;
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+  std::cout << "Time taken for parallel_for "<< " is: " << duration.count() << " microseconds" << std::endl;
 
 }
 
@@ -130,14 +130,14 @@ void parallel_for(int low1, int high1,int low2, int high2,  std::function<void(i
         std::exit(EXIT_FAILURE); // Exit the program on error
       }
     end_time = std::chrono::high_resolution_clock::now(); // Record end time
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-    std::cout << "Time taken for thread "<< std::to_string(tid[i][j]) << " is: " << duration.count() << " milliseconds" << std::endl;
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+    std::cout << "Time taken for thread "<< std::to_string(tid[i][j]) << " is: " << duration.count() << " microseconds" << std::endl;
     }
     
   }
   auto end_time = std::chrono::high_resolution_clock::now(); // Record end time
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
-  std::cout << "Time taken for parallel_for "<< " is: " << duration.count() << " milliseconds" << std::endl;
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+  std::cout << "Time taken for parallel_for "<< " is: " << duration.count() << " microseconds" << std::endl;
 
 
 }
